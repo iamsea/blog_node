@@ -1,3 +1,6 @@
+const { login } = require('../controller/user')
+const { SuccessModel, ErrorModel } = require('../model/resModel')
+
 const handerUserRouter = (req, res) => {
     const method = req.method
     const path = req.path
@@ -5,9 +8,11 @@ const handerUserRouter = (req, res) => {
 
     // login
     if (method === 'POST' && path === '/api/user/login') {
-        return {
-            'msg': 'this is get login api'
+        const data = login(req.body.username, req.body.password)
+        if (data) {
+            return new SuccessModel(data)
         }
+        return new ErrorModel('login fail')
     }
 }
 

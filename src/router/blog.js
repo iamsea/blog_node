@@ -1,9 +1,10 @@
-const { getList, getDetail } = require('../controller/blog')
+const { getList, getDetail, createBlog, deleteBlog } = require('../controller/blog')
 const { SuccessModel, ErrorModel } = require('../model/resModel')
 
 const handerBlogRouter = (req, res) => {
     const method = req.method
     const path = req.path
+    const id = req.query.id
 
     // get blog list
     if (method === 'GET' && path === '/api/blog/list') {
@@ -15,23 +16,26 @@ const handerBlogRouter = (req, res) => {
 
     // get blog detail
     if (method === 'GET' && path === '/api/blog/detail') {
-        const id = req.query.id
         const data = getDetail(id)
         return new SuccessModel(data)
     }
 
     // create a blog
-    if (method === 'POST' && path === '/api/blog/new') {
-        return {
-            'msg': 'this is create blog api'
+    if (method === 'POST' && path === '/api/blog/create') {
+        const data = createBlog(req.body)
+        if (data) {
+            return new SuccessModel(data)
         }
+        return new ErrorModel('create blog fail')
     }
 
     // delete a blog
     if (method === 'POST' && path === '/api/blog/del') {
-        return {
-            'msg': 'this is delete blog api'
+        const data = deleteBlog(id)
+        if (data) {
+            return new SuccessModel()
         }
+        return new ErrorModel('delete blog fail')
     }
 }
 
